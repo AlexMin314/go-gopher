@@ -1,5 +1,5 @@
 package schema
 
-type Task struct {
+type Todo struct {
 	//
 }

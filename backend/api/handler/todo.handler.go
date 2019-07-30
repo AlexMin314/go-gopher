@@ -1,32 +1,56 @@
 package handler
 
 import (
-	"log"
+	"encoding/json"
 	"net/http"
 
+	"github.com/AlexMin314/go-gopher/backend/api/constant"
 	"github.com/AlexMin314/go-gopher/backend/api/repository"
 	"github.com/AlexMin314/go-gopher/backend/api/schema"
+	"github.com/AlexMin314/go-gopher/backend/api/service"
 )
 
 type ResponseError struct {
-	Err error
+	Code     int
+	ErrorMsg string
 }
 
 type Response struct {
 	ID    repository.ID `json:"id,omitempty"`
-	Task  schema.Task   `json:"task"`
+	Todo  schema.Todo   `json:"todo"`
 	Error ResponseError `json:"error"`
 }
 
 var memDB = repository.NewMemoryDataAccess()
 
-func TodoApiHandler(w http.ResponseWriter, r *http.Request) {
-	//
-	// requestDump, _ := httputil.DumpRequest(r, true)
-	log.Println("-------------------------------")
-	// log.Println(string(requestDump))
-	log.Println(r.URL.Path)
-	log.Println(r.URL)
-	log.Println("-------------------------------")
+func GetTodoHandler(w http.ResponseWriter, r *http.Request) {
+	id := service.GetTodoId(r)
+	todo, err := memDB.GetTodo(id)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), 404)
+	// 	return
+	// }
 
+	encodeErr := json.NewEncoder(w).Encode(Response{
+		ID:   id,
+		Todo: todo,
+		// Error: ResponseError{err},
+		Error: ResponseError{404, err.Error()},
+	})
+
+	if encodeErr != nil {
+		http.Error(w, constant.InternalServerError, constant.InternalServerErrorCode)
+	}
+}
+
+func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
+	//
+}
+
+func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
+	//
+}
+
+func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
+	//
 }

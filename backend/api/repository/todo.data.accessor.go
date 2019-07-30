@@ -5,8 +5,8 @@ import "github.com/AlexMin314/go-gopher/backend/api/schema"
 type ID string
 
 type DataAccess interface {
-	GetTask(id ID) (schema.Task, error)
-	PutTask(id ID, t schema.Task) error
-	PostTask(t schema.Task) (ID, error)
-	DeleteTask(id ID) error
+	GetTodo(id ID) (schema.Todo, error)
+	PutTodo(id ID, t schema.Todo) error
+	PostTodo(t schema.Todo) (ID, error)
+	DeleteTodo(id ID) error
 }

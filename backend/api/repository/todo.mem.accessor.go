@@ -9,15 +9,15 @@ import (
 
 // for simaple in-memory case
 type MemoryDataAccess struct {
-	tasks  map[ID]schema.Task
+	todos  map[ID]schema.Todo
 	nextID int64
 }
 
 func NewMemoryDataAccess() DataAccess {
 	return &MemoryDataAccess{
-		tasks: map[ID]schema.Task{
-			"1": schema.Task{},
-			"2": schema.Task{},
+		todos: map[ID]schema.Todo{
+			"1": schema.Todo{},
+			"2": schema.Todo{},
 		},
 		nextID: int64(3),
 	}
@@ -25,33 +25,33 @@ func NewMemoryDataAccess() DataAccess {
 
 var ErrTaskNotExist = errors.New("task does not exist")
 
-func (m *MemoryDataAccess) GetTask(id ID) (schema.Task, error) {
-	task, prs := m.tasks[id]
+func (m *MemoryDataAccess) GetTodo(id ID) (schema.Todo, error) {
+	task, prs := m.todos[id]
 	if !prs {
-		return schema.Task{}, ErrTaskNotExist
+		return schema.Todo{}, ErrTaskNotExist
 	}
 	return task, nil
 }
 
-func (m *MemoryDataAccess) PostTask(t schema.Task) (ID, error) {
+func (m *MemoryDataAccess) PostTodo(t schema.Todo) (ID, error) {
 	id := ID(fmt.Sprint(m.nextID))
 	m.nextID++
-	m.tasks[id] = t
+	m.todos[id] = t
 	return id, nil
 }
 
-func (m *MemoryDataAccess) PutTask(id ID, t schema.Task) error {
-	if _, prs := m.tasks[id]; !prs {
+func (m *MemoryDataAccess) PutTodo(id ID, t schema.Todo) error {
+	if _, prs := m.todos[id]; !prs {
 		return ErrTaskNotExist
 	}
-	m.tasks[id] = t
+	m.todos[id] = t
 	return nil
 }
 
-func (m *MemoryDataAccess) DeleteTask(id ID) error {
-	if _, prs := m.tasks[id]; !prs {
+func (m *MemoryDataAccess) DeleteTodo(id ID) error {
+	if _, prs := m.todos[id]; !prs {
 		return ErrTaskNotExist
 	}
-	delete(m.tasks, id)
+	delete(m.todos, id)
 	return nil
 }
