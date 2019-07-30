@@ -7,6 +7,10 @@ import (
 
 func RegisterRoutes() *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc(TodoRoute, handler.TodoApiHandler)
+	todoSubRouter := r.PathPrefix(todoApiRoute).Subrouter()
+	todoSubRouter.HandleFunc(todoIdPattern, handler.TodoApiHandler).Methods("GET")
+	todoSubRouter.HandleFunc("", handler.TodoApiHandler).Methods("POST")
+	todoSubRouter.HandleFunc(todoIdPattern, handler.TodoApiHandler).Methods("PUT")
+	todoSubRouter.HandleFunc(todoIdPattern, handler.TodoApiHandler).Methods("PUT")
 	return r
 }

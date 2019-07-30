@@ -1,11 +1,13 @@
 package api
 
 const (
+	root    = "/"
 	apiPath = "/api"
 	version = "/v1"
 	todo    = "/todo"
 )
 
 const (
-	TodoRoute = apiPath + version + todo
+	todoApiRoute  = apiPath + version + todo
+	todoIdPattern = "/{id:[0-9]+}"
 )
