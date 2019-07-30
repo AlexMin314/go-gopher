@@ -5,12 +5,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const (
-	todo = "todo"
-)
-
 func RegisterRoutes() *mux.Router {
-	router := mux.NewRouter()
-	router.HandleFunc(todo, handler.TodoApiHandler)
-	return router
+	r := mux.NewRouter()
+	r.HandleFunc(TodoRoute, handler.TodoApiHandler)
+	return r
 }

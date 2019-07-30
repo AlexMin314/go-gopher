@@ -3,19 +3,42 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/AlexMin314/go-gopher/backend/api"
 )
 
-const (
-	apiPath = "/api"
-	version = "/v1"
-)
+func RequestLogger(targetMux http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		targetMux.ServeHTTP(w, r)
+
+		// log request by who(IP address)
+		requesterIP := r.RemoteAddr
+
+		// requestDump, _ := httputil.DumpRequest(r, true)
+		// log.Println("-------------------------------")
+		// log.Println(string(requestDump))
+		// log.Println("-------------------------------")
+
+		log.Printf(
+			"%s\t\t%s\t\t%s\t\t%v",
+			r.Method,
+			r.RequestURI,
+			requesterIP,
+			time.Since(start),
+		)
+	})
+}
 
 func main() {
 	r := api.RegisterRoutes()
-	r.PathPrefix(apiPath + version)
-	// todo: header setting
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
+	logger.Printf("Server is starting...")
+
+	log.Fatal(http.ListenAndServe(":8080", RequestLogger(r)))
 }

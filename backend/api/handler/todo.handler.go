@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"log"
 	"net/http"
+	"net/http/httputil"
 
 	"github.com/AlexMin314/go-gopher/backend/api/repository"
 	"github.com/AlexMin314/go-gopher/backend/api/schema"
@@ -21,4 +23,8 @@ var memDB = repository.NewMemoryDataAccess()
 
 func TodoApiHandler(w http.ResponseWriter, r *http.Request) {
 	//
+	requestDump, _ := httputil.DumpRequest(r, true)
+	log.Println("-------------------------------")
+	log.Println(string(requestDump))
+	log.Println("-------------------------------")
 }
