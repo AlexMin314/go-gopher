@@ -1,4 +1,4 @@
-package main
+package playground
 
 import (
 	"fmt"
@@ -133,6 +133,23 @@ func CountChar(s string, codeCount map[rune]int) {
 	for _, r := range s {
 		codeCount[r]++
 	}
+}
+
+func LogStruct() {
+	type MyStruct struct {
+		X, Y int
+	}
+	var (
+		p = MyStruct{1, 2}
+		q = MyStruct{X: 1}
+		r = MyStruct{}
+	)
+
+	fmt.Println(p, q, r)
+
+	k := []int{1, 2, 3}
+	t := k
+	fmt.Println(&k, &t, &k == &t)
 }
 
 func hasDupeRune(s string) bool {

@@ -1,4 +1,4 @@
-package main
+package playground
 
 import (
 	"fmt"
@@ -80,4 +80,11 @@ func ExampleCounter() {
 	// h 1
 	// l 2
 	// o 1
+}
+
+func ExampleStruct() {
+	LogStruct()
+	// Output:
+	// {1 2} {1 0} {0 0}
+
 }
