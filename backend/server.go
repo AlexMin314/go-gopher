@@ -18,11 +18,6 @@ func RequestLogger(targetMux http.Handler) http.Handler {
 		// log request by who(IP address)
 		requesterIP := r.RemoteAddr
 
-		// requestDump, _ := httputil.DumpRequest(r, true)
-		// log.Println("-------------------------------")
-		// log.Println(string(requestDump))
-		// log.Println("-------------------------------")
-
 		log.Printf(
 			"%s\t\t%s\t\t%s\t\t%v",
 			r.Method,

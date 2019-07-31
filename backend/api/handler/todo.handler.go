@@ -53,13 +53,35 @@ func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
 			Success: true,
 		})
 		if err != nil {
-			return
+			panic(err)
 		}
 	}
 }
 
 func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
-	//
+	id := service.GetTodoIdParam(r)
+	todos, err := service.ParseTodoPayload(r)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = memDB.PutTodo(id, todos[0])
+	if err != nil {
+		http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(Response{
+		ID:      id,
+		Todo:    todos[0],
+		Success: true,
+	})
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
