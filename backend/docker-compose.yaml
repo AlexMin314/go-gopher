@@ -3,9 +3,8 @@ services:
   server:
     build: '.'
     volumes:
-      - .:/go/src/github.com/AlexMin314/go-gopher/backend
+      - .:/go/src/github.com/user/go-gopher/backend
     ports:
-      - '3000:3001'
       - '8080:8080'
   nginx:
     build: './nginx'

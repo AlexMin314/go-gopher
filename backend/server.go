@@ -3,10 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
+	"strconv"
 	"time"
 
 	"github.com/AlexMin314/go-gopher/backend/api"
+	"github.com/AlexMin314/go-gopher/backend/config"
 )
 
 func RequestLogger(targetMux http.Handler) http.Handler {
@@ -32,8 +33,6 @@ func main() {
 	r := api.RegisterRoutes()
 	http.Handle("/", r)
 
-	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
-	logger.Printf("Server is starting...")
-
-	log.Fatal(http.ListenAndServe(":8080", RequestLogger(r)))
+	c := config.InitServerConfig()
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Port), RequestLogger(r)))
 }
