@@ -11,9 +11,8 @@ import (
 )
 
 type Response struct {
-	ID      repository.ID `json:"id,omitempty"`
-	Todo    schema.Todo   `json:"todo,omitempty"`
-	Success bool          `json:"success,omitempty"`
+	ID   repository.ID `json:"id,omitempty"`
+	Todo schema.Todo   `json:"todo,omitempty"`
 }
 
 var memDB = repository.NewMemoryDataAccess()
@@ -48,9 +47,8 @@ func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
 	for _, todo := range todos {
 		id, _ := memDB.PostTodo(todo)
 		err = json.NewEncoder(w).Encode(Response{
-			ID:      id,
-			Todo:    todo,
-			Success: true,
+			ID:   id,
+			Todo: todo,
 		})
 		if err != nil {
 			panic(err)
@@ -74,9 +72,8 @@ func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = json.NewEncoder(w).Encode(Response{
-		ID:      id,
-		Todo:    todos[0],
-		Success: true,
+		ID:   id,
+		Todo: todos[0],
 	})
 
 	if err != nil {
@@ -95,8 +92,6 @@ func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = json.NewEncoder(w).Encode(Response{
 		ID: id,
-		// Todo:    schema.Todo{},
-		Success: true,
 	})
 
 	if err != nil {

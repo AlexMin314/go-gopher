@@ -7,3 +7,10 @@ const (
 const (
 	EmptyTodoPayloadError = "Any todo data required to proceed the request"
 )
+
+type Checker string
+
+const (
+	Yes Checker = "Y"
+	No  Checker = "N"
+)
