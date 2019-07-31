@@ -1,5 +1,8 @@
-FROM golang:latest
+FROM golang:alpine
 
+RUN apk update
+RUN apk add git
+RUN apk add bash
 WORKDIR /go/src/github.com/user/go-gopher/backend
 
 COPY . .
