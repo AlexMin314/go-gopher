@@ -1,6 +1,6 @@
 package schema
 
 type Todo struct {
-	Title   string
-	Checked bool
+	Title   string `json:"title,omitempty"`
+	Checked bool   `json:"checked,omitempty"`
 }

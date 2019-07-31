@@ -85,5 +85,21 @@ func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
-	//
+	id := service.GetTodoIdParam(r)
+	err := memDB.DeleteTodo(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(Response{
+		ID: id,
+		// Todo:    schema.Todo{},
+		Success: true,
+	})
+
+	if err != nil {
+		panic(err)
+	}
 }
