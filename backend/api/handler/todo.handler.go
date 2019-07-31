@@ -10,41 +10,52 @@ import (
 	"github.com/AlexMin314/go-gopher/backend/api/service"
 )
 
-type ResponseError struct {
-	Code     int
-	ErrorMsg string
-}
-
 type Response struct {
-	ID    repository.ID `json:"id,omitempty"`
-	Todo  schema.Todo   `json:"todo"`
-	Error ResponseError `json:"error"`
+	ID      repository.ID `json:"id,omitempty"`
+	Todo    schema.Todo   `json:"todo,omitempty"`
+	Success bool          `json:"success,omitempty"`
 }
 
 var memDB = repository.NewMemoryDataAccess()
 
 func GetTodoHandler(w http.ResponseWriter, r *http.Request) {
-	id := service.GetTodoId(r)
+	id := service.GetTodoIdParam(r)
 	todo, err := memDB.GetTodo(id)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), 404)
-	// 	return
-	// }
 
-	encodeErr := json.NewEncoder(w).Encode(Response{
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(Response{
 		ID:   id,
 		Todo: todo,
-		// Error: ResponseError{err},
-		Error: ResponseError{404, err.Error()},
 	})
 
-	if encodeErr != nil {
-		http.Error(w, constant.InternalServerError, constant.InternalServerErrorCode)
+	if err != nil {
+		http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
 	}
 }
 
 func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
-	//
+	todos, err := service.ParseTodoPayload(r)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	for _, todo := range todos {
+		id, _ := memDB.PostTodo(todo)
+		err = json.NewEncoder(w).Encode(Response{
+			ID:      id,
+			Todo:    todo,
+			Success: true,
+		})
+		if err != nil {
+			return
+		}
+	}
 }
 
 func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
