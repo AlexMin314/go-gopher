@@ -4,8 +4,6 @@ services:
     build: '.'
     volumes:
       - .:/go/src/github.com/user/go-gopher/backend
-    ports:
-      - '8080:8080'
   nginx:
     build: './nginx'
     volumes:

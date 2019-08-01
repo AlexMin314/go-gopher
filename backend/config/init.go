@@ -9,6 +9,7 @@ import (
 
 type Configuration struct {
 	Server ServerConfig
+	DB     DatabaseConfig
 }
 
 func InitServerConfig() ServerConfig {
