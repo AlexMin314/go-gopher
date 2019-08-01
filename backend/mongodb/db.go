@@ -11,9 +11,7 @@ import (
 
 func ConnectMongo() {
 	c := config.InitConfig()
-	log.Println(c.DB.Mongo)
 	clientOptions := options.Client().ApplyURI(c.DB.Mongo.ConnectionUri)
-	// clientOptions := options.Client().ApplyURI("mongodb://mongodb:27017")
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
 	if err != nil {

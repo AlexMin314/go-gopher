@@ -8,8 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterRoutes() *mux.Router {
-	r := mux.NewRouter().StrictSlash(false)
+func RegisterRoutes(r *mux.Router) *mux.Router {
 	todoSubRouter := r.PathPrefix(constant.TodoApiRoute).Subrouter()
 	todoSubRouter.HandleFunc(constant.TodoIdPattern, controller.GetTodoController).Methods(http.MethodGet)
 	todoSubRouter.HandleFunc("/", controller.PostTodoController).Methods(http.MethodPost)
