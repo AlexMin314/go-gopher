@@ -10,9 +10,9 @@ import (
 	"github.com/AlexMin314/go-gopher/backend/todo/router"
 )
 
-func InitTodoService(logger logger.ReqLogger) {
+func InitTodoService(lg logger.ReqLogger) {
 	r := router.RegisterRoutes()
 	http.Handle("/", r)
-	c := config.InitServerConfig()
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Port), logger(r)))
+	c := config.InitConfig()
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Server.Port), lg(r)))
 }

@@ -1,9 +1,16 @@
 version: '3.6'
+
 services:
   server:
     build: '.'
     volumes:
-      - .:/go/src/github.com/user/go-gopher/backend
+      - .:/go/src/github.com/AlexMin314/go-gopher/backend
+    depends_on:
+      - 'mongo'
+    links:
+      - mongo
+    networks:
+      - backend
   nginx:
     build: './nginx'
     volumes:
@@ -12,14 +19,23 @@ services:
       - '80:80'
     depends_on:
       - 'server'
-  mongodb:
-    images: mongo:latest
+      - 'mongo'
+    networks:
+      - backend
+  mongo:
+    image: mongo:latest
     ports:
       - target: 27017
         published: 27017
         protocol: tcp
         mode: host
-    volumes:
-      - type: bind
-        source: ./backup
-        target: /backup
+    # volumes:
+    #   - type: bind
+    #     source: ./backup
+    #     target: /backup
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:

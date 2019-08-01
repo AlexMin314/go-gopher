@@ -3,7 +3,7 @@ FROM golang:alpine
 RUN apk update
 RUN apk add git
 RUN apk add bash
-WORKDIR /go/src/github.com/user/go-gopher/backend
+WORKDIR /go/src/github.com/AlexMin314/go-gopher/backend
 
 COPY . .
 

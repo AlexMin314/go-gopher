@@ -12,7 +12,7 @@ type Configuration struct {
 	DB     DatabaseConfig
 }
 
-func InitServerConfig() ServerConfig {
+func InitConfig() Configuration {
 	viper.SetConfigName("config.example")
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()
@@ -26,5 +26,5 @@ func InitServerConfig() ServerConfig {
 		log.Fatalf("unable to decode into struct, %v", err)
 	}
 
-	return configuration.Server
+	return configuration
 }

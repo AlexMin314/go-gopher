@@ -2,4 +2,5 @@ server:
   port: 8081
 
 db:
-  connectionUri: ''
+  mongo:
+    connectionUri: 'mongodb://mongodb:27017'
