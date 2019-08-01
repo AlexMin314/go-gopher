@@ -1,13 +1,13 @@
-package handler
+package controller
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/AlexMin314/go-gopher/backend/api/constant"
-	"github.com/AlexMin314/go-gopher/backend/api/repository"
-	"github.com/AlexMin314/go-gopher/backend/api/schema"
-	"github.com/AlexMin314/go-gopher/backend/api/service"
+	"github.com/AlexMin314/go-gopher/backend/todo/constant"
+	"github.com/AlexMin314/go-gopher/backend/todo/repository"
+	"github.com/AlexMin314/go-gopher/backend/todo/schema"
+	"github.com/AlexMin314/go-gopher/backend/todo/service"
 )
 
 type Response struct {
@@ -17,7 +17,7 @@ type Response struct {
 
 var memDB = repository.NewMemoryDataAccess()
 
-func GetTodoHandler(w http.ResponseWriter, r *http.Request) {
+func GetTodoController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todo, err := memDB.GetTodo(id)
 
@@ -36,7 +36,7 @@ func GetTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
+func PostTodoController(w http.ResponseWriter, r *http.Request) {
 	todos, err := service.ParseTodoPayload(r)
 
 	if err != nil {
@@ -56,7 +56,7 @@ func PostTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
+func PutTodoController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todos, err := service.ParseTodoPayload(r)
 
@@ -81,7 +81,7 @@ func PutTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteTodoController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	err := memDB.DeleteTodo(id)
 

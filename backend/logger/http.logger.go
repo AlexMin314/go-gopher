@@ -1,14 +1,12 @@
-package main
+package logger
 
 import (
 	"log"
 	"net/http"
-	"strconv"
 	"time"
-
-	"github.com/AlexMin314/go-gopher/backend/api"
-	"github.com/AlexMin314/go-gopher/backend/config"
 )
+
+type ReqLogger func(m http.Handler) http.Handler
 
 func RequestLogger(targetMux http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -27,12 +25,4 @@ func RequestLogger(targetMux http.Handler) http.Handler {
 			time.Since(start),
 		)
 	})
-}
-
-func main() {
-	r := api.RegisterRoutes()
-	http.Handle("/", r)
-
-	c := config.InitServerConfig()
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Port), RequestLogger(r)))
 }

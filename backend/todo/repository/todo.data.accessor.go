@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/AlexMin314/go-gopher/backend/api/schema"
+import "github.com/AlexMin314/go-gopher/backend/todo/schema"
 
 type ID string
 

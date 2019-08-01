@@ -7,8 +7,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/AlexMin314/go-gopher/backend/api/repository"
-	"github.com/AlexMin314/go-gopher/backend/api/schema"
+	"github.com/AlexMin314/go-gopher/backend/todo/repository"
+	"github.com/AlexMin314/go-gopher/backend/todo/schema"
 )
 
 func GetTodoIdParam(r *http.Request) repository.ID {

@@ -12,3 +12,14 @@ services:
       - '80:80'
     depends_on:
       - 'server'
+  mongodb:
+    images: mongo:latest
+    ports:
+      - target: 27017
+        published: 27017
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: bind
+        source: ./backup
+        target: /backup

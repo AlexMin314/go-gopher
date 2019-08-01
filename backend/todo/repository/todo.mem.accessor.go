@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/AlexMin314/go-gopher/backend/api/schema"
+	"github.com/AlexMin314/go-gopher/backend/todo/schema"
 )
 
 // for simaple in-memory case
