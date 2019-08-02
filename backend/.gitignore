@@ -1,2 +1,4 @@
 gin-bin
 config.yml
+vendor
+data

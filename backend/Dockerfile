@@ -7,8 +7,9 @@ WORKDIR /go/src/github.com/AlexMin314/go-gopher/backend
 
 COPY . .
 
-RUN go get ./
 RUN go get github.com/codegangsta/gin
+RUN go get github.com/golang/dep/cmd/dep
+RUN dep ensure
 
 EXPOSE 8080
 

@@ -7,6 +7,8 @@ services:
       - .:/go/src/github.com/AlexMin314/go-gopher/backend
     depends_on:
       - 'mongo'
+    ports:
+      - '8080:8081'
     links:
       - mongo
     networks:
@@ -19,23 +21,17 @@ services:
       - '80:80'
     depends_on:
       - 'server'
-      - 'mongo'
     networks:
       - backend
   mongo:
     image: mongo:latest
     ports:
-      - target: 27017
-        published: 27017
-        protocol: tcp
-        mode: host
-    # volumes:
-    #   - type: bind
-    #     source: ./backup
-    #     target: /backup
+      - '27017:27017'
     networks:
       - backend
-
+    volumes:
+      - ./data:/data/db
 networks:
-  frontend:
+  # frontend:
   backend:
+    driver: bridge

@@ -1,0 +1,19 @@
+[prune]
+  go-tests = true
+  unused-packages = true
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.7.3"
+
+[[constraint]]
+  name = "github.com/spf13/viper"
+  version = "1.4.0"
+
+[[constraint]]
+  name = "go.mongodb.org/mongo-driver"
+  version = "~1.0.0"
+
+[[override]]
+  branch = "master"
+  name = "github.com/codegangsta/gin"

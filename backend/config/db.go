@@ -1,9 +1,13 @@
 package config
 
+import "time"
+
 type DatabaseConfig struct {
 	Mongo MongoConfig
 }
 
 type MongoConfig struct {
-	ConnectionUri string
+	ConnectionUri     string
+	ConnectionTimeout time.Duration
+	PingTimeout       time.Duration
 }
