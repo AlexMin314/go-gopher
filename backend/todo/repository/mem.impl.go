@@ -33,6 +33,14 @@ func (m *MemoryDataAccess) GetTodo(id schema.ID) (schema.Todo, error) {
 	return task, nil
 }
 
+func (m *MemoryDataAccess) GetAllTodo() ([]schema.Todo, error) {
+	var result []schema.Todo
+	for _, todo := range m.todos {
+		result = append(result, todo)
+	}
+	return result, nil
+}
+
 func (m *MemoryDataAccess) PostTodo(t schema.Todo) (schema.ID, error) {
 	id := schema.ID(fmt.Sprint(m.nextID))
 	m.nextID++

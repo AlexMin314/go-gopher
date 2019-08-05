@@ -12,7 +12,7 @@ import (
 
 var memDB = repository.NewMemoryDataAccess()
 
-func GetTodoMemController(w http.ResponseWriter, r *http.Request) {
+func GetTodoMem(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todo, err := memDB.GetTodo(id)
 
@@ -31,7 +31,24 @@ func GetTodoMemController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PostTodoMemController(w http.ResponseWriter, r *http.Request) {
+func GetAllTodoMem(w http.ResponseWriter, r *http.Request) {
+	todos, err := memDB.GetAllTodo()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(schema.Response{
+		Todos: todos,
+	})
+
+	if err != nil {
+		http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+	}
+}
+
+func PostTodoMem(w http.ResponseWriter, r *http.Request) {
 	todos, err := service.ParseTodoPayload(r)
 
 	if err != nil {
@@ -51,7 +68,7 @@ func PostTodoMemController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PutTodoMemController(w http.ResponseWriter, r *http.Request) {
+func PutTodoMem(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todos, err := service.ParseTodoPayload(r)
 
@@ -76,7 +93,7 @@ func PutTodoMemController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeleteTodoMemController(w http.ResponseWriter, r *http.Request) {
+func DeleteTodoMem(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	err := memDB.DeleteTodo(id)
 
