@@ -13,7 +13,7 @@ type MemoryDataAccess struct {
 	nextID int64
 }
 
-func NewMemoryDataAccess() DataAccess {
+func NewMemoryDataAccess() DataMemAccess {
 	return &MemoryDataAccess{
 		todos: map[schema.ID]schema.Todo{
 			"1": schema.Todo{},

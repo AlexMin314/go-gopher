@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -41,7 +42,16 @@ func Connect() *Mongo {
 	m.Session = client
 	m.DB = client.Database(c.DbName)
 
-	recover(m)
+	recoverTodo(m)
 
 	return m
+}
+
+func Close(m *Mongo) {
+	err := m.Session.Disconnect(context.TODO())
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connection to MongoDB closed.")
 }

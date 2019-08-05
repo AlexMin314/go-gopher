@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 
 	"github.com/AlexMin314/go-gopher/backend/db/mongodb"
 	"github.com/AlexMin314/go-gopher/backend/todo/schema"
@@ -31,9 +32,29 @@ func (m *MongoRepository) GetTodo(id schema.ID) (schema.Todo, error) {
 	return result, err
 }
 
-func (m *MongoRepository) GetAllTodo() ([]schema.Todo, error) {
-	var result []schema.Todo
-	return result, nil
+func (m *MongoRepository) GetAllTodo() ([]*schema.Todo, error) {
+	cur, err := m.DB.Collection("todos").Find(
+		context.TODO(),
+		bson.D{{}},
+		// options.Find().SetLimit(2),
+	)
+
+	var results []*schema.Todo
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()) {
+		var todo schema.Todo
+		if err := cur.Decode(&todo); err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, &todo)
+	}
+
+	cur.Close(context.TODO())
+	return results, nil
 }
 
 func (m *MongoRepository) PostTodo(t schema.Todo) (schema.ID, error) {
@@ -47,6 +68,10 @@ func (m *MongoRepository) PutTodo(id schema.ID, t schema.Todo) error {
 func (m *MongoRepository) DeleteTodo(id schema.ID) error {
 	//
 	return nil
+}
+
+func (m *MongoRepository) DeleteAllTodo() error {
+	return m.DB.Collection("todos").Drop(context.TODO())
 }
 
 // func getOneTodo

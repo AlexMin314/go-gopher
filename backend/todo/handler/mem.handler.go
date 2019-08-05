@@ -21,7 +21,7 @@ func GetTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.Response{
+	err = json.NewEncoder(w).Encode(schema.TodoResponse{
 		ID:   id,
 		Todo: todo,
 	})
@@ -39,7 +39,7 @@ func GetAllTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.Response{
+	err = json.NewEncoder(w).Encode(schema.TodoResponse{
 		Todos: todos,
 	})
 
@@ -58,7 +58,7 @@ func PostTodoMem(w http.ResponseWriter, r *http.Request) {
 
 	for _, todo := range todos {
 		id, _ := memDB.PostTodo(todo)
-		err = json.NewEncoder(w).Encode(schema.Response{
+		err = json.NewEncoder(w).Encode(schema.TodoResponse{
 			ID:   id,
 			Todo: todo,
 		})
@@ -83,7 +83,7 @@ func PutTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.Response{
+	err = json.NewEncoder(w).Encode(schema.TodoResponse{
 		ID:   id,
 		Todo: todos[0],
 	})
@@ -102,7 +102,7 @@ func DeleteTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.Response{
+	err = json.NewEncoder(w).Encode(schema.TodoResponse{
 		ID: id,
 	})
 

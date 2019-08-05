@@ -23,9 +23,29 @@ func GetTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(schema.Response{
+		err = json.NewEncoder(w).Encode(schema.TodoResponse{
 			ID:   id,
 			Todo: todo,
+		})
+
+		if err != nil {
+			http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		}
+	}
+}
+
+func GetAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
+	dao := repository.NewTodoMongoAccess(m)
+	return func(w http.ResponseWriter, r *http.Request) {
+		todos, err := dao.GetAllTodo()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(schema.TodosResponse{
+			Todos: todos,
 		})
 
 		if err != nil {
@@ -96,3 +116,23 @@ func GetTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 // 		panic(err)
 // 	}
 // }
+
+func DeleteAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
+	dao := repository.NewTodoMongoAccess(m)
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := dao.DeleteAllTodo()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(schema.ResultResponse{
+			Success: constant.Yes,
+		})
+
+		if err != nil {
+			http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		}
+	}
+}
