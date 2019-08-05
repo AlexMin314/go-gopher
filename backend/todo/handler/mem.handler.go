@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"encoding/json"
@@ -10,14 +10,9 @@ import (
 	"github.com/AlexMin314/go-gopher/backend/todo/service"
 )
 
-type Response struct {
-	ID   repository.ID `json:"id,omitempty"`
-	Todo schema.Todo   `json:"todo,omitempty"`
-}
-
 var memDB = repository.NewMemoryDataAccess()
 
-func GetTodoController(w http.ResponseWriter, r *http.Request) {
+func GetTodoMemController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todo, err := memDB.GetTodo(id)
 
@@ -26,7 +21,7 @@ func GetTodoController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(Response{
+	err = json.NewEncoder(w).Encode(schema.Response{
 		ID:   id,
 		Todo: todo,
 	})
@@ -36,7 +31,7 @@ func GetTodoController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PostTodoController(w http.ResponseWriter, r *http.Request) {
+func PostTodoMemController(w http.ResponseWriter, r *http.Request) {
 	todos, err := service.ParseTodoPayload(r)
 
 	if err != nil {
@@ -46,7 +41,7 @@ func PostTodoController(w http.ResponseWriter, r *http.Request) {
 
 	for _, todo := range todos {
 		id, _ := memDB.PostTodo(todo)
-		err = json.NewEncoder(w).Encode(Response{
+		err = json.NewEncoder(w).Encode(schema.Response{
 			ID:   id,
 			Todo: todo,
 		})
@@ -56,7 +51,7 @@ func PostTodoController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PutTodoController(w http.ResponseWriter, r *http.Request) {
+func PutTodoMemController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	todos, err := service.ParseTodoPayload(r)
 
@@ -71,7 +66,7 @@ func PutTodoController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(Response{
+	err = json.NewEncoder(w).Encode(schema.Response{
 		ID:   id,
 		Todo: todos[0],
 	})
@@ -81,7 +76,7 @@ func PutTodoController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeleteTodoController(w http.ResponseWriter, r *http.Request) {
+func DeleteTodoMemController(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
 	err := memDB.DeleteTodo(id)
 
@@ -90,7 +85,7 @@ func DeleteTodoController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(Response{
+	err = json.NewEncoder(w).Encode(schema.Response{
 		ID: id,
 	})
 

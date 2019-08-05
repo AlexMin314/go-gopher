@@ -10,4 +10,5 @@ type MongoConfig struct {
 	ConnectionUri     string
 	ConnectionTimeout time.Duration
 	PingTimeout       time.Duration
+	DbName            string
 }

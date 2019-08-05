@@ -30,7 +30,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./data:/data/db
+      - ./data/mongo:/data/db
 networks:
   # frontend:
   backend:

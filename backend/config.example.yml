@@ -6,3 +6,4 @@ db:
     connectionUri: 'mongodb://mongo:27017'
     connectionTimeout: 10
     pingTimeout: 2
+    dbName: 'todo'

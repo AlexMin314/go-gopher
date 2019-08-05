@@ -7,12 +7,11 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/AlexMin314/go-gopher/backend/todo/repository"
 	"github.com/AlexMin314/go-gopher/backend/todo/schema"
 )
 
-func GetTodoIdParam(r *http.Request) repository.ID {
-	return repository.ID(mux.Vars(r)["id"])
+func GetTodoIdParam(r *http.Request) schema.ID {
+	return schema.ID(mux.Vars(r)["id"])
 }
 
 type TodoPostBody struct {

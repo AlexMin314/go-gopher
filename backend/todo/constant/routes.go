@@ -4,9 +4,11 @@ const (
 	ApiPath    = "/api"
 	ApiVersion = "/v1"
 	Todo       = "/todo"
+	Mem        = "/m"
 )
 
 const (
-	TodoApiRoute  = ApiPath + ApiVersion + Todo
-	TodoIdPattern = "/{id:[0-9]+}"
+	TodoApiRoute     = ApiPath + ApiVersion + Todo
+	TodoIdPattern    = "/{id:[0-9a-z]+}"
+	TodoMemIdPattern = Mem + TodoIdPattern
 )
