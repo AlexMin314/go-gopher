@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/AlexMin314/go-gopher/backend/db/mongodb"
@@ -23,9 +24,13 @@ func GetTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(schema.TodoResponse{
-			ID:   id,
-			Todo: todo,
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				ID:      id,
+				Title:   todo.Title,
+				Checked: todo.Checked,
+			},
 		})
 
 		if err != nil {
@@ -44,8 +49,11 @@ func GetAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(schema.TodosResponse{
-			Todos: todos,
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				Todos: todos,
+			},
 		})
 
 		if err != nil {
@@ -54,25 +62,36 @@ func GetAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-// func PostTodoMemController(w http.ResponseWriter, r *http.Request) {
-// 	todos, err := service.ParseTodoPayload(r)
+func PostTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
+	dao := repository.NewTodoMongoAccess(m)
+	return func(w http.ResponseWriter, r *http.Request) {
+		todos, err := service.ParseTodoPayload(r)
 
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
-// 	for _, todo := range todos {
-// 		id, _ := memDB.PostTodo(todo)
-// 		err = json.NewEncoder(w).Encode(schema.Response{
-// 			ID:   id,
-// 			Todo: todo,
-// 		})
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 	}
-// }
+		result, postErr := dao.PostTodo(todos)
+		log.Println(result, postErr)
+
+		if postErr != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				IDs: result,
+			},
+		})
+
+		if err != nil {
+			http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		}
+	}
+}
 
 // func PutTodoMemController(w http.ResponseWriter, r *http.Request) {
 // 	id := service.GetTodoIdParam(r)
@@ -127,8 +146,8 @@ func DeleteAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(schema.ResultResponse{
-			Success: constant.Yes,
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
 		})
 
 		if err != nil {

@@ -13,4 +13,4 @@ RUN dep ensure
 
 EXPOSE 8080
 
-CMD bash start.sh
+CMD bash bin/start.sh

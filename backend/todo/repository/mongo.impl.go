@@ -6,6 +6,7 @@ import (
 
 	"github.com/AlexMin314/go-gopher/backend/db/mongodb"
 	"github.com/AlexMin314/go-gopher/backend/todo/schema"
+	"github.com/AlexMin314/go-gopher/backend/todo/service"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -54,13 +55,17 @@ func (m *MongoRepository) GetAllTodo() ([]*schema.Todo, error) {
 	}
 
 	cur.Close(context.TODO())
-	return results, nil
+	return results, err
 }
 
-func (m *MongoRepository) PostTodo(t schema.Todo) (schema.ID, error) {
-	//
-	return schema.ID("10"), nil
+func (m *MongoRepository) PostTodo(t []schema.Todo) ([]interface{}, error) {
+	result, err := m.DB.Collection("todos").InsertMany(context.TODO(), service.CastTodoToInterface(t))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return result.InsertedIDs, err
 }
+
 func (m *MongoRepository) PutTodo(id schema.ID, t schema.Todo) error {
 	//
 	return nil
@@ -73,5 +78,3 @@ func (m *MongoRepository) DeleteTodo(id schema.ID) error {
 func (m *MongoRepository) DeleteAllTodo() error {
 	return m.DB.Collection("todos").Drop(context.TODO())
 }
-
-// func getOneTodo

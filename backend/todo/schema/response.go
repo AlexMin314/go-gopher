@@ -3,16 +3,17 @@ package schema
 import "github.com/AlexMin314/go-gopher/backend/todo/constant"
 
 type ID string
-
-type TodoResponse struct {
-	ID    ID     `json:"id,omitempty"`
-	Todo  Todo   `json:"todo,omitempty"`
-	Todos []Todo `json:"todos,omitempty"`
-}
-type TodosResponse struct {
-	Todos []*Todo `json:"todos,omitempty"`
+type Response struct {
+	Data   Data            `json:"data,omitempty"`
+	Status constant.Status `json:"status"`
 }
 
-type ResultResponse struct {
-	Success constant.Checker `json:"success"`
+type Data struct {
+	ID  ID            `json:"id,omitempty"`
+	IDs []interface{} `json:"ids,omitempty"`
+	// IDs     []ID             `json:"ids,omitempty"`
+	Title   string           `json:"title,omitempty"`
+	Checked constant.Checker `json:"checked,omitempty"`
+	Todo    []Todo           `json:"todo,omitempty"`
+	Todos   []*Todo          `json:"todos,omitempty"`
 }

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/AlexMin314/go-gopher/backend/todo/constant"
@@ -21,9 +22,13 @@ func GetTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.TodoResponse{
-		ID:   id,
-		Todo: todo,
+	err = json.NewEncoder(w).Encode(schema.Response{
+		Status: constant.Success,
+		Data: schema.Data{
+			ID:      id,
+			Title:   todo.Title,
+			Checked: todo.Checked,
+		},
 	})
 
 	if err != nil {
@@ -39,8 +44,11 @@ func GetAllTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.TodoResponse{
-		Todos: todos,
+	err = json.NewEncoder(w).Encode(schema.Response{
+		Status: constant.Success,
+		Data: schema.Data{
+			Todo: todos,
+		},
 	})
 
 	if err != nil {
@@ -58,12 +66,14 @@ func PostTodoMem(w http.ResponseWriter, r *http.Request) {
 
 	for _, todo := range todos {
 		id, _ := memDB.PostTodo(todo)
-		err = json.NewEncoder(w).Encode(schema.TodoResponse{
-			ID:   id,
-			Todo: todo,
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				ID: id,
+			},
 		})
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 }
@@ -83,13 +93,15 @@ func PutTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.TodoResponse{
-		ID:   id,
-		Todo: todos[0],
+	err = json.NewEncoder(w).Encode(schema.Response{
+		Status: constant.Success,
+		Data: schema.Data{
+			ID: id,
+		},
 	})
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
@@ -102,11 +114,14 @@ func DeleteTodoMem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(schema.TodoResponse{
-		ID: id,
+	err = json.NewEncoder(w).Encode(schema.Response{
+		Status: constant.Success,
+		Data: schema.Data{
+			ID: id,
+		},
 	})
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }

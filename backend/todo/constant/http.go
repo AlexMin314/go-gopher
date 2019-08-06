@@ -9,8 +9,11 @@ const (
 )
 
 type Checker string
+type Status string
 
 const (
-	Yes Checker = "Y"
-	No  Checker = "N"
+	Yes     Checker = "Y"
+	No      Checker = "N"
+	Success Status  = "success"
+	Failure Status  = "failure"
 )

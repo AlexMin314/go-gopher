@@ -6,7 +6,7 @@ type DataAccess interface {
 	GetTodo(id schema.ID) (schema.Todo, error)
 	GetAllTodo() ([]*schema.Todo, error)
 	PutTodo(id schema.ID, t schema.Todo) error
-	PostTodo(t schema.Todo) (schema.ID, error)
+	PostTodo(t []schema.Todo) ([]interface{}, error)
 	DeleteTodo(id schema.ID) error
 	DeleteAllTodo() error
 }
