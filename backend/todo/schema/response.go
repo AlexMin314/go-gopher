@@ -9,11 +9,11 @@ type Response struct {
 }
 
 type Data struct {
-	ID  ID            `json:"id,omitempty"`
-	IDs []interface{} `json:"ids,omitempty"`
-	// IDs     []ID             `json:"ids,omitempty"`
-	Title   string           `json:"title,omitempty"`
-	Checked constant.Checker `json:"checked,omitempty"`
-	Todo    []Todo           `json:"todo,omitempty"`
-	Todos   []*Todo          `json:"todos,omitempty"`
+	ID            ID               `json:"id,omitempty"`
+	IDs           []interface{}    `json:"ids,omitempty"`
+	Title         string           `json:"title,omitempty"`
+	Checked       constant.Checker `json:"checked,omitempty"`
+	Todo          []Todo           `json:"todo,omitempty"`
+	Todos         []*Todo          `json:"todos,omitempty"`
+	ModifiedCount int64            `json:"modifiedCount,omitempty"`
 }

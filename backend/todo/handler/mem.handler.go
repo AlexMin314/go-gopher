@@ -57,14 +57,14 @@ func GetAllTodoMem(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostTodoMem(w http.ResponseWriter, r *http.Request) {
-	todos, err := service.ParseTodoPayload(r)
+	payload, err := service.ParseTodoPayload(r)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	for _, todo := range todos {
+	for _, todo := range payload.Todos {
 		id, _ := memDB.PostTodo(todo)
 		err = json.NewEncoder(w).Encode(schema.Response{
 			Status: constant.Success,
@@ -80,14 +80,14 @@ func PostTodoMem(w http.ResponseWriter, r *http.Request) {
 
 func PutTodoMem(w http.ResponseWriter, r *http.Request) {
 	id := service.GetTodoIdParam(r)
-	todos, err := service.ParseTodoPayload(r)
+	payload, err := service.ParseTodoPayload(r)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = memDB.PutTodo(id, todos[0])
+	err = memDB.PutTodo(id, payload.Todos[0])
 	if err != nil {
 		http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
 		return

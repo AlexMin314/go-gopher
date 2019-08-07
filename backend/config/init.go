@@ -8,11 +8,12 @@ import (
 )
 
 type Configuration struct {
-	Server ServerConfig
-	DB     DatabaseConfig
+	Server     ServerConfig
+	DB         DatabaseConfig
+	Validation Validation
 }
 
-func InitConfig() Configuration {
+func GetConfig() Configuration {
 	viper.SetConfigName("config.example")
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()

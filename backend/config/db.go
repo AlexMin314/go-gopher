@@ -11,4 +11,5 @@ type MongoConfig struct {
 	ConnectionTimeout time.Duration
 	PingTimeout       time.Duration
 	DbName            string
+	MaxTodoCount      int
 }

@@ -21,11 +21,11 @@ func RegisterRoutes(r *mux.Router, m *mongodb.Mongo) *mux.Router {
 	todoSubRouter.HandleFunc(constant.TodoMemIdPattern, handler.DeleteTodoMem).Methods(http.MethodDelete)
 
 	// with Mongo
-	todoSubRouter.HandleFunc("", handler.GetAllTodo(m)).Methods(http.MethodGet)
+	todoSubRouter.HandleFunc(constant.Root, handler.GetAllTodo(m)).Methods(http.MethodGet)
 	todoSubRouter.HandleFunc(constant.TodoIdPattern, handler.GetTodo(m)).Methods(http.MethodGet)
-	todoSubRouter.HandleFunc("", handler.PostTodo(m)).Methods(http.MethodPost)
-	// todoSubRouter.HandleFunc(constant.TodoIdPattern, handler.PutTodoController).Methods(http.MethodPut)
+	todoSubRouter.HandleFunc(constant.Root, handler.PostTodo(m)).Methods(http.MethodPost)
+	todoSubRouter.HandleFunc(constant.Root, handler.PutTodo(m)).Methods(http.MethodPut)
 	// todoSubRouter.HandleFunc(constant.TodoIdPattern, handler.DeleteTodoController).Methods(http.MethodDelete)
-	todoSubRouter.HandleFunc("", handler.DeleteAllTodo(m)).Methods(http.MethodDelete)
+	todoSubRouter.HandleFunc(constant.Root, handler.DeleteAllTodo(m)).Methods(http.MethodDelete)
 	return r
 }

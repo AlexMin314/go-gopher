@@ -5,6 +5,7 @@ const (
 	ApiVersion = "/v1"
 	Todo       = "/todo"
 	Mem        = "/m"
+	Root       = ""
 )
 
 const (

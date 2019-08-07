@@ -7,3 +7,6 @@ db:
     connectionTimeout: 10
     pingTimeout: 2
     dbName: 'todo'
+
+validation:
+  maxTodoCount: 50

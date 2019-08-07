@@ -5,7 +5,8 @@ const (
 )
 
 const (
-	EmptyTodoPayloadError = "Any todo data required to proceed the request"
+	EmptyTodoPayloadError    = "Any todo data required to proceed the request."
+	ExceedMaxTodoInsertLimit = "Too many todos requested to be inserted."
 )
 
 type Checker string

@@ -2,8 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
 	"net/http"
+	"reflect"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/AlexMin314/go-gopher/backend/db/mongodb"
 
@@ -14,10 +17,10 @@ import (
 )
 
 func GetTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
-	dao := repository.NewTodoMongoAccess(m)
+	repo := repository.NewTodoMongoAccess(m)
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := service.GetTodoIdParam(r)
-		todo, err := dao.GetTodo(id)
+		todo, err := repo.Find(id)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -40,9 +43,9 @@ func GetTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 }
 
 func GetAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
-	dao := repository.NewTodoMongoAccess(m)
+	repo := repository.NewTodoMongoAccess(m)
 	return func(w http.ResponseWriter, r *http.Request) {
-		todos, err := dao.GetAllTodo()
+		todos, err := repo.FindAll()
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -63,20 +66,19 @@ func GetAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 }
 
 func PostTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
-	dao := repository.NewTodoMongoAccess(m)
+	repo := repository.NewTodoMongoAccess(m)
 	return func(w http.ResponseWriter, r *http.Request) {
-		todos, err := service.ParseTodoPayload(r)
+		payload, err := service.ParseTodoPayload(r)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		result, postErr := dao.PostTodo(todos)
-		log.Println(result, postErr)
+		result, postErr := repo.Save(payload.Todos)
 
 		if postErr != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, postErr.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -93,30 +95,50 @@ func PostTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-// func PutTodoMemController(w http.ResponseWriter, r *http.Request) {
-// 	id := service.GetTodoIdParam(r)
-// 	todos, err := service.ParseTodoPayload(r)
+func PutTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
+	repo := repository.NewTodoMongoAccess(m)
+	return func(w http.ResponseWriter, r *http.Request) {
+		payload, err := service.ParseTodoPayload(r)
+		empty := schema.Payload{}
+		var result int64
 
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
+		if reflect.DeepEqual(empty, payload) {
+			err = errors.New("Empty payload")
+		}
 
-// 	err = memDB.PutTodo(id, todos[0])
-// 	if err != nil {
-// 		http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
-// 		return
-// 	}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
-// 	err = json.NewEncoder(w).Encode(schema.Response{
-// 		ID:   id,
-// 		Todo: todos[0],
-// 	})
+		if len(payload.IDs) != 0 && empty.ToggleTo != payload.ToggleTo {
+			result, err = repo.ToggleMany(payload.IDs, payload.ToggleTo)
+		} else {
+			objId, _ := primitive.ObjectIDFromHex(payload.ID)
+			result, err = repo.UpdateOne(schema.Todo{
+				ID:      objId,
+				Title:   payload.Title,
+				Checked: payload.Checked,
+			})
+		}
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// }
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				ModifiedCount: result,
+			},
+		})
+
+		if err != nil {
+			http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		}
+	}
+}
 
 // func DeleteTodoMemController(w http.ResponseWriter, r *http.Request) {
 // 	id := service.GetTodoIdParam(r)
@@ -139,7 +161,7 @@ func PostTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 func DeleteAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 	dao := repository.NewTodoMongoAccess(m)
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := dao.DeleteAllTodo()
+		err := dao.DeleteAll()
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
