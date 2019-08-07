@@ -108,9 +108,10 @@ func (m *MongoRepository) ToggleMany(ids []string, toggleTo constant.Checker) (i
 	return result.ModifiedCount, err
 }
 
-func (m *MongoRepository) Delete(id schema.ID) error {
-	//
-	return nil
+func (m *MongoRepository) Delete(id schema.ID) (int64, error) {
+	objID, _ := primitive.ObjectIDFromHex(string(id))
+	result, err := m.DB.Collection("todos").DeleteOne(context.TODO(), bson.D{{"_id", objID}})
+	return result.DeletedCount, err
 }
 
 func (m *MongoRepository) DeleteAll() error {

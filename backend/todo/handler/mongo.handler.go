@@ -140,24 +140,28 @@ func PutTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-// func DeleteTodoMemController(w http.ResponseWriter, r *http.Request) {
-// 	id := service.GetTodoIdParam(r)
-// 	err := memDB.DeleteTodo(id)
+func DeleteTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
+	repo := repository.NewTodoMongoAccess(m)
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := repo.Delete(service.GetTodoIdParam(r))
 
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
-// 	err = json.NewEncoder(w).Encode(schema.Response{
-// 		ID: id,
-// 	})
+		err = json.NewEncoder(w).Encode(schema.Response{
+			Status: constant.Success,
+			Data: schema.Data{
+				DeletedCount: result,
+			},
+		})
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// }
-
+		if err != nil {
+			http.Error(w, constant.InternalServerError, http.StatusInternalServerError)
+		}
+	}
+}
 func DeleteAllTodo(m *mongodb.Mongo) func(http.ResponseWriter, *http.Request) {
 	dao := repository.NewTodoMongoAccess(m)
 	return func(w http.ResponseWriter, r *http.Request) {

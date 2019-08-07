@@ -11,7 +11,7 @@ type DataAccess interface {
 	UpdateOne(t schema.Todo) (int64, error)
 	ToggleMany(ids []string, t constant.Checker) (int64, error)
 	Save(t []schema.Todo) ([]interface{}, error)
-	Delete(id schema.ID) error
+	Delete(id schema.ID) (int64, error)
 	DeleteAll() error
 }
 

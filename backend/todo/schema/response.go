@@ -16,4 +16,5 @@ type Data struct {
 	Todo          []Todo           `json:"todo,omitempty"`
 	Todos         []*Todo          `json:"todos,omitempty"`
 	ModifiedCount int64            `json:"modifiedCount,omitempty"`
+	DeletedCount  int64            `json:"deletedCount,omitempty"`
 }
