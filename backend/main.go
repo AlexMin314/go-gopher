@@ -7,7 +7,7 @@ import (
 
 	"github.com/AlexMin314/go-gopher/backend/config"
 	"github.com/AlexMin314/go-gopher/backend/db/mongodb"
-	"github.com/AlexMin314/go-gopher/backend/logger"
+	mw "github.com/AlexMin314/go-gopher/backend/middleware"
 	"github.com/AlexMin314/go-gopher/backend/sensor"
 	"github.com/AlexMin314/go-gopher/backend/todo"
 	"github.com/gorilla/mux"
@@ -29,6 +29,7 @@ func main() {
 	c := config.GetConfig()
 	m := initDB(c.DB)
 	r := composeService(m)
+	r.Use(mw.HttpLogger, mw.Response, mw.Cors)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Server.Port), logger.RequestLogger(r)))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(c.Server.Port), nil))
 }

@@ -2,3 +2,5 @@ gin-bin
 config.yml
 vendor
 data
+main
+backend

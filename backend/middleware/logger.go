@@ -1,4 +1,4 @@
-package logger
+package mw
 
 import (
 	"log"
@@ -6,13 +6,9 @@ import (
 	"time"
 )
 
-type ReqLogger func(m http.Handler) http.Handler
-
-func RequestLogger(targetMux http.Handler) http.Handler {
+func HttpLogger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-
-		targetMux.ServeHTTP(w, r)
 
 		// log request by who(IP address)
 		requesterIP := r.RemoteAddr
@@ -24,5 +20,6 @@ func RequestLogger(targetMux http.Handler) http.Handler {
 			requesterIP,
 			time.Since(start),
 		)
+		next.ServeHTTP(w, r)
 	})
 }
